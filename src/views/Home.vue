@@ -1,37 +1,61 @@
 <template>
   <layout-basic>
     <div slot="content">
-      <div class="col-md-12 mx-3 mb-4">
-        <h1>Extrato</h1>
-      </div>
-      <div class="row">
-        <table class="table table-striped table-bordered">
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Banco</th>
-              <th>Descrição</th>
-              <th>Valor</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="item in statementItems" :key="item.id">
-              <td>{{ item.date }}</td>
-              <td><img :src="item.bank" width="40" height="40" alt="..." /></td>
-              <td>{{ item.description }}</td>
-              <td>R$ {{ item.value }}</td>
-              <td col mb-3>
-                <a
-                  class="btn btn-outline-dark mt-auto"
-                  href="#"
-                  @click="detail(item)"
-                  >Detalhar</a
+      <b-modal id="myModal" title="Detalhamento">
+        {{ detailItem.description }} {{ detailItem.date }}
+        <template #modal-footer="{ ok }">
+          <b-button size="sm" variant="success" @click="ok()"> OK </b-button>
+        </template>
+      </b-modal>
+      <div class="py-3">
+        <div class="card">
+          <table class="table table-borderless">
+            <thead>
+              <tr>
+                <th style="font-size: 20px; border-bottom: 1pt solid black">
+                  Descrição
+                </th>
+                <th style="font-size: 20px; border-bottom: 1pt solid black">
+                  Data
+                </th>
+                <th style="font-size: 20px; border-bottom: 1pt solid black">
+                  Valor (R$)
+                </th>
+                <th
+                  style="font-size: 20px; border-bottom: 1pt solid black"
+                ></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in statementItems" :key="item.id">
+                <td>
+                  <img :src="item.bank" width="25" height="25" alt="..." />
+                  {{ item.description }}
+                </td>
+                <td>{{ item.date }}</td>
+
+                <td
+                  v-bind:class="
+                    item.signal === 'credit' ? 'text-success' : 'text-danger'
+                  "
                 >
-              </td>
-            </tr>
-          </tbody>
-        </table>
+                  {{ item.signal === "credit" ? "+" : "-" }} {{ item.value }}
+                </td>
+
+                <td>
+                  <a
+                    style="font-size: 0.8em; width: 5vh"
+                    class="btn btn-dark btn-sm py-0"
+                    href="#"
+                    v-b-modal="'myModal'"
+                    @click="detail(item)"
+                    ><i class="fa fa-search"></i
+                  ></a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </layout-basic>
@@ -40,7 +64,6 @@
 <script>
 import LayoutBasic from "../layouts/Basic.vue";
 import statementService from "../services/statement";
-import { mapActions } from "vuex";
 
 export default {
   name: "HomePage",
@@ -51,14 +74,13 @@ export default {
   data() {
     return {
       statementItems: [],
+      detailItem: {},
     };
   },
 
   methods: {
-    ...mapActions(["addItemToCart"]),
-
     detail(item) {
-      alert("Modal com os detalhes aqui", item);
+      this.detailItem = item;
     },
   },
 
