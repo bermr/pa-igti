@@ -1,8 +1,41 @@
 <template>
   <layout-basic>
     <div slot="content">
-      <b-modal id="myModal" title="Detalhamento">
-        {{ detailItem.description }} {{ detailItem.date }}
+      <b-modal id="myModal">
+        <div class="row">
+          <div class="col-md-9" style="font-size: 30px">
+            {{ detailItem.description }}
+          </div>
+          <div
+            class="py-2 px-2 card"
+            style="font-size: 20px"
+            v-bind:class="
+              detailItem.signal === 'credit' ? 'text-success' : 'text-danger'
+            "
+          >
+            {{ detailItem.signal == "credit" ? "Crédito" : "Débito" }}
+          </div>
+        </div>
+        <div class="pt-3">
+          <div class="row">
+            <div class="col-md-6">
+              <div style="font-size: 20px">Valor do lançamento</div>
+              <strong>{{ detailItem.value }}</strong>
+            </div>
+            <div class="col-md-6 text-center">
+              <div style="font-size: 20px">Data de lançamento</div>
+              <strong style="text-align: center">{{ detailItem.date }}</strong>
+            </div>
+          </div>
+          <div class="pt-1">
+            <div style="font-size: 20px">Instituição</div>
+            <strong>{{ detailItem.bankName }}</strong>
+          </div>
+          <div class="pt-1">
+            <div style="font-size: 20px">Número de controle</div>
+            <strong>{{ detailItem.registerNumber }}</strong>
+          </div>
+        </div>
         <template #modal-footer="{ ok }">
           <b-button size="sm" variant="success" @click="ok()"> OK </b-button>
         </template>

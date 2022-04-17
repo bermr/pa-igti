@@ -6,13 +6,14 @@
           <li class="list-group-item">
             <img :src="item.logo" width="25" height="25" alt="..." />
             {{ item.name }}
-            <a
-              class="btn btn-success btn-circle btn-sm"
+            <button
+              class="btn btn-success btn-sm"
               href="#"
               v-b-modal="'myModal'"
               @click="registerBank(item)"
-              ><i class="fa fa-plus"></i
-            ></a>
+            >
+              <i class="fa fa-plus"></i>
+            </button>
           </li>
         </ul>
         <template #modal-footer="{ ok }">
@@ -35,13 +36,14 @@
               <li class="list-group-item">
                 <img :src="item.logo" width="25" height="25" alt="..." />
                 {{ item.name }}
-                <a
+                <button
                   class="btn btn-danger btn-circle btn-sm"
                   href="#"
                   v-b-modal="'myModal'"
                   @click="remove(item)"
-                  ><i class="fa fa-minus"></i
-                ></a>
+                >
+                  <i class="fa fa-minus"></i>
+                </button>
               </li>
             </ul>
           </div>
@@ -92,11 +94,13 @@ export default {
       this.registeredBanks = this.registeredBanks.filter((item) => {
         return item.name !== itemToRemove.name;
       });
+      this.availableBanks.push(itemToRemove);
     },
   },
 
   mounted() {
-    this.availableBanks = bankService.all();
+    this.registeredBanks = bankService.all().slice(0, 3);
+    this.availableBanks = bankService.all().slice(3);
   },
 };
 </script>
@@ -108,14 +112,5 @@ export default {
 
 .column {
   flex: 50%;
-}
-
-.btn-circle.btn-sm {
-  width: 25px;
-  height: 25px;
-  padding: 6px 0px;
-  border-radius: 15px;
-  font-size: 18px;
-  text-align: center;
 }
 </style>
