@@ -1,10 +1,32 @@
 <template>
   <layout-basic>
     <div slot="content">
+      <b-modal id="myModal" title="Adicionar">
+        <ul v-for="item in availableBanks" class="list-group" :key="item.id">
+          <li class="list-group-item">
+            <img :src="item.logo" width="25" height="25" alt="..." />
+            {{ item.name }}
+            <a
+              class="btn btn-success btn-circle btn-sm"
+              href="#"
+              v-b-modal="'myModal'"
+              @click="registerBank(item)"
+              ><i class="fa fa-plus"></i
+            ></a>
+          </li>
+        </ul>
+        <template #modal-footer="{ ok }">
+          <b-button size="sm" variant="success" @click="ok()"> OK </b-button>
+        </template>
+      </b-modal>
       <div class="card">
         <div class="row px-5 py-3">
           <div class="column">
-            <h3>Instituições registradas</h3>
+            <h1>Instituições registradas</h1>
+
+            <div v-if="registeredBanks.length == 0">
+              <p>Você ainda não possui nenhuma insituição cadastrada :(</p>
+            </div>
             <ul
               v-for="item in registeredBanks"
               :key="item.id"
@@ -14,10 +36,10 @@
                 <img :src="item.logo" width="25" height="25" alt="..." />
                 {{ item.name }}
                 <a
-                  class="btn btn-danger btn-sm py-0"
+                  class="btn btn-danger btn-circle btn-sm"
                   href="#"
                   v-b-modal="'myModal'"
-                  @click="detail(item)"
+                  @click="remove(item)"
                   ><i class="fa fa-minus"></i
                 ></a>
               </li>
@@ -25,21 +47,15 @@
           </div>
           <div class="column px-3 py-5">
             <p>
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-              reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-              sunt in culpa qui officia deserunt mollit anim id est laborum."
+              Adicione uma nova instituição financeira ao seu extrato utilizando
+              o ecossistema do Open Banking do Brasil. Ao clicar você está
+              concordando com os Termos de Uso e etc...
             </p>
-            <a
-              class="btn btn-success btn-sm py-0"
-              href="#"
-              v-b-modal="'myModal'"
-              @click="detail(item)"
-              ><i class="fa fa-plus"></i
-            ></a>
+            <div class="text-center">
+              <a class="btn btn-success btn-lg//" href="#" v-b-modal="'myModal'"
+                >Adicionar</a
+              >
+            </div>
           </div>
         </div>
       </div>
@@ -64,8 +80,23 @@ export default {
     };
   },
 
+  methods: {
+    registerBank(itemToAdd) {
+      this.registeredBanks.push(itemToAdd);
+      this.availableBanks = this.availableBanks.filter((item) => {
+        return item.id !== itemToAdd.id;
+      });
+    },
+
+    remove(itemToRemove) {
+      this.registeredBanks = this.registeredBanks.filter((item) => {
+        return item.name !== itemToRemove.name;
+      });
+    },
+  },
+
   mounted() {
-    this.registeredBanks = bankService.all();
+    this.availableBanks = bankService.all();
   },
 };
 </script>
@@ -77,5 +108,14 @@ export default {
 
 .column {
   flex: 50%;
+}
+
+.btn-circle.btn-sm {
+  width: 25px;
+  height: 25px;
+  padding: 6px 0px;
+  border-radius: 15px;
+  font-size: 18px;
+  text-align: center;
 }
 </style>
