@@ -12,12 +12,12 @@ const router = new VueRouter({
   linkActiveClass: "active",
   routes: [
     {
-      path: "/",
+      path: "/pa-igti",
       name: "HomePage",
       component: Home,
     },
     {
-      path: "/configuracoes",
+      path: "/pa-igti/config",
       name: "ConfigPage",
       component: Config,
     },
