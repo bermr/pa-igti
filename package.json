@@ -9,7 +9,6 @@
     "deploy": "node scripts/deploy.js"
   },
   "dependencies": {
-    "axios": "^0.19",
     "bootstrap-vue": "^2.15.0",
     "core-js": "^3.8.3",
     "jquery": "^3.6.0",
